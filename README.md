@@ -923,17 +923,641 @@
 
     * 冒泡排序
 
+        原理:`相邻两个元素之间比较大小，每次循环都将最大的数放到右边`
+
+    * 选择排序
+
+        原理: `将第一个元素的值和后面所有的元素进行比较发现最小放最左边，然后第二个元素再和后面进行比较，每次循环都将最小值放到左边`
+
+    * 二分查找(需要数据是从小到大的)
+
+        原理:`将数组首元素下标和尾元素下标相加/2，查找该下标对应的元素，如果在右边，那么就让这个元素+1和最后的元素相加/2重复同样的操作，直到最后`
+
+* String
+
+    * 介绍
+
+        `String定义的类型为字符串类型，属于引用数据类型，由于字符串使用比较频繁，jdk定义的String都是存储在方法区的常量池当中的。`
+
+    * 特点
+
+        * 字符串创建出来是无法改变的
+        * 垃圾回收器是不会回收常量的
+
+    * 存储原理
+
         ```
+        String x = "123"; //相当于是在栈内存中创建了一个引用指向方法区内存中的常量池里的字符串
+        String x1 = new String("1233"); //相当于是在堆内存中创建了一个空间里面保存着指向常量池的地址，保存在栈内存里的x1通过引用指向堆内存
+        ```
+
+    * 注意
+
+        * 垃圾回收器是不会回收常量的
+        * 字符串比较使用要equals
+
+    * 构造方法
+
+        ```
+        String s1 = new String("");
+        String s2 = "";
+        String s3 = new String(char数组);
+        String s4 = new String(char数组,起始位置，延伸长度);
+        String s3 = new String(byte数组);
+        String s4 = new String(byte数组,起始位置，延伸长度);
+        ```
+
+    * String的常用方法
+
+        * charAt: 查找字符串里某个字符
+        * compareTo 返回结果为前-后
+        * contains查看是否包含
+        * endsWith 查看是否以某个字符串结尾
+        * equalsIgnoreCase判断两个字符串忽略大小是否相等
+        * getBytes将字符串转化为byte数组
+        * indexOf判断子字符串出现在当前字符串第一个位置的下标索引
+        * isEmpty判断字符串是否为空
+        * lastIndexOf判断字符串最后一次出现的索引
+        * replace替换字符串里字符
+        * split通过字符来拆分字符串并放入数组
+        * startsWith判断字符串是否以什么开始
+        * substring截取字符串 当包含一个参数时代表起始位置 两个参数代表起始位置和终止位置 (左闭右开)
+        * toCharArray将字符串转化为char类型的数组
+        * toUpperCase 将字符串全部大写 
+        * toLowerCase将字符串全部小写
+        * valueOf将非字符串类型转化为字符串 println其实内部调用了valueOf方法
+
+    * StringBuffer和StringBuilder拼接字符串
+
+        * 通过 +进行字符串拼接的弊端
+
+            `每一次拼接得到的结果需要创建在方法区内存的常量存储池里，如果拼接多了就会出现浪费存储池的问题`
+
+        * StringBuffer默认情况下开辟了16字节空间的数组，当然StringBuffer可以自定义byte数组空间的大小
+
+        * 通过append来进行拼接字符串的动作，如果空间不够那么就会自动扩容
+
+        * StringBuffer 线程安全 StringBuilder非线程安全
+
+    * 八种包装类
+
+        | 基本数据类型 | 包装类型            |
+        | ------------ | ------------------- |
+        | Byte         | Java,lang.Byte      |
+        | Short        | Java,lang.Short     |
+        | Int          | Java,lang.Interger  |
+        | Long         | Java,lang.Long      |
+        | Char         | Java,lang.Character |
+        | Boolean      | Java,lang.Boolean   |
+        | Float        | Java,lang.Float     |
+        | Double       | Java,lang.Double    |
+        |              |                     |
+
+    * 装箱和拆箱
+
+        * 装箱
+
+            ```
+            //基本数据类型转化成引用数据类型
+            Interger a = new Interger(123);
+            ```
+
+        * 拆箱
+
+            ```
+            //引用数据类型转化成基本数据类型
+            float a1 = a.floatValue();
+            ```
+
+        * 自动装箱，自动拆箱
+
+            ```
+            //自动装箱
+            Interger x = 100;
+            //自动拆箱
+            int y = x;
+            ```
+
+    * 面试题
+
+        1. 为什么String定义的字符串不可以改变
+
+            `查看源代码，String类里包含了一个byte类型的数组，它是用来存储每一条数据的，这个数组是用final来修饰的，数组长度是无法修改的，并且引用一旦指向对象就无法指向其余对象`
+
+        2. 为什么StringBuffer和StringBuilder可以进行改变
+
+            `因为内部的byte类型的数组并没有拿final进行修饰，初始化容量为16，底层采用了arrcopy来进行扩容，适用于字符拼接`
+
+        3. 字符串不可变是什么意思
+
+            ```
+            String a = "abc";
+            a = "xyc";
+            //这个可变吗？ 答案：不可变
+            字符串不可变意思是存储池里存储的字符串对象不能发生修改
+            ```
+
+    * 字符串类型转化
+
+        * 字符串转int
+
+            ```
+            int a = Integer.parseInt("123");
+            ```
+
+        * 字符串转float
+
+            ```
+            float h1 = Float.parseFloat("1.2");
+            ```
+
+        * 字符串转double
+
+            ```
+            double h = Double.parseDouble("1.23");
+            ```
+
+    * int String Integer类型直接互相转换
+
+        ```
+        //int -> String
+        String a = int + "";
+        String a1 = String.valueOf(int);
         
+        //String -> int
+        int a2 = Integer.parseInt("123");
+        
+        //int -> Integer 装箱
+        Integer x = 100;
+        
+        //Integer -> int 拆箱
+        int x1 = x.intValue();
+        
+        //String -> Integer
+        Integer.valueOf("123");
+        
+        //Integer -> String
+        String.valueOf(Integer)
         ```
 
         
+
+* Date
+
+    * 获取当前时间并进行初始化
+
+        ```
+        Date newdate = new Date();
+        SimpleDateFormat formatTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss SS");
+        String nowTime = formatTime.format(newdate);
+        ```
+
+    * 初始化时间转化为系统时间
+
+        ```
+        String time = "2023-03-19 12:12:56 668";
+        Date day = formatTime.parse(time);
+        System.out.println(day);
+        ```
+
+    * 转化成毫秒数
+
+        ```
+        System.currentTimeMillis()
+        ```
+
+* Number
+
+    * DecimalFormat
+
+        `通过特殊字符进行划分数据操作`
+
+    * BigDecimal
+
+        `定义大精度类型的数据，但是计算需要使用BigDecimal独有的方法`
+
+* Random
+
+    ```
+    Random rd = new Random(); //创建一个随机数字
+    Random rd = new Random(11); //创建一个[1-10]以内的数字
+    ```
+
+    
+
+* 枚举
+
+    ```
+    一枚一枚列举出来多种可能发生后的结果
+    ```
+
+* 异常
+
+    * 概念: 程序执行过程中出现的不正常的信息 
+
+    * 好处：通过异常可以捕获出错误信息让程序更加健壮
+
+    * 语法
+
+        ```
+        //通过异常类来创建异常对象 在程序发生错误的时候会new一个异常类形成异常对象 并且将其输出到控制台中
+        NumberFormatException nfe = new NumberFormatException("出错了");
+        ```
+
+    * 异常的执行机制
+
+        * 需要通过查看UML图来明确所有类之间的关系
+        * Object下有thro wable(可抛出的)，throwable下有两个分支Error(不可处理直接退出JVM)和Exception(可处理)，Exception下包含编译时异常(直接子类)，运行时异常 
+        * 编译时异常出现的概率比较高，需要在编译时进行预处理操作，运行时异常出现的概率比较低
+        * 所有异常都是发生在运行阶段
+
+    * 处理异常的两种方式
+
+        * 异常上抛 
+
+            `如果某个方法出现异常了如果选择上抛的形式需要注意调用这个方法的人也需要进行上抛或者捕获异常`
+
+        * 捕获异常
+
+    * Try catch深入
+
+        `catch可以捕获多个异常，但是异常一定要从小到大，java8新特性，可以将一些同级异常通过|的形式写到一块`
+
+    * 打印异常信息的常用方法
+
+        * getMessage：打印异常传入字符串参数信息
+        * printStackTrace：打印异常堆栈信息
+
+    * finally
+
+        * 特征
+            * finally子句必须和trycatch同时存在
+            * finally子句是在最后执行的
+        * 出现的场景
+            * 主要用于资源的释放
+            * finally里的代码一定会执行(System.exit退出虚拟机才不执行)
+            * 执行一些try异常语句后的一些特殊语句
+
+    * 错误输出语句中可以通过throw 异常来取代sout输出
+
+    * 异常类覆盖父类必须比子类的编译时异常多
+
+* 集合
+
+    * 概念：相当于是一个容器,容纳多个内存地址
+
+    * 注意点
+
+        * 集合里面存储的不是基本数据类型也不是java对象，存储的是引用
+
+        * 集合本身也是一个对象
+
+        * java每一个集合对应的可能是不同的数据结构，向集合内存储数据相当于是在向数据结构内存储数据
+
+            > 数组，二叉树，链表，哈希表，
+
+    * 集合的位置
+
+        > 存在于java.util.*，所有的集合类和集合接口都存储在这
+
+    * 集合分为两大类
+
+        * Collection接口(单个值直接存入)
+
+            * 迭代原理
+
+                ```
+                Collection继承了Iterable接口，调用其里面的Iterator方法创建了Iterator迭代器对象，通过对象点形式调用方法对集合进行操作
+                ```
+
+            * Set、List接口继承(泛化)于Collection
+
+                * List
+
+                    ```
+                    存储的数据有序，可以重复，包含下标，如何存入，如何取出
+                    ```
+
+                    * List的实现类
+
+                        * ArrayList
+
+                            > 采用数组的数据结构，非线程安全
+                            >
+                            > 往往添加元素都是往后面添加元素，效率不受影响，数组查找元素一般很快
+
+                        * LinkedList
+
+                            > 采用了双向链表数据结构
+                            >
+                            > 增删数据效率高
+
+                        * Vector
+
+                            > 采用数组的数据结构，线程安全，效率低
+
+                    * List接口常用方法
+
+                        * Add(添加的元素) 或者是 add(添加元素，下标索引)
+
+                        * get(下标索引)
+
+                            ```
+                            通过索引获取集合指定对象
+                            ```
+
+                        * remove(下标)
+
+                        * set(下标，替换后的元素对象)
+
+                        * indexOf(指定对象)
+
+                            ```
+                            获取指定对象第一个的下标索引
+                            ```
+
+                        * lastindexOf(指定对象)
+
+                            ```
+                            获取指定对象的最后一个的下标索引
+                            ```
+
+                            
+
+                * Set
+
+                    ```
+                    无序不可以重复，没有下标
+                    ```
+
+                    * Set的实现类
+
+                        * HashSet
+
+                            > 使用HashSet时候底层实际上是new了一个HashMap数据结构，存储数据实际上存储到的是hashmap里，哈希表数据结构
+
+                        * SortedMap接口
+
+                            > 这个接口实际上是有TreeSet来实现的，TreeSet底层是new了一个TreeMap，属于二叉树数据结构，该接口是可以自动按照大小进行排序的，不可以重复
+
+        * Map(通过键值对的形式进行存储)
+
+            * Map集合的key是无序并且无法重复的
+
+            * 实现类
+
+                * HashMap
+
+                    > 底层是哈希表数据结构，是非线程安全的
+
+                * HashTable
+
+                    > HashTable是非线程安全的
+
+                    * Properties继承于HashTable
+
+                        > 属于非线程安全的，Properties存储元素采用的是key value的形式，又被称为属性类
+
+                * SortedMap接口
+
+        * 集合中的方法
+
+            * add()
+
+                > 向集合内部添加元素
+
+            * size()
+
+                > 统计集合内部元素的个数
+
+            * clear()
+
+                > 清空集合的个数
+
+            * contains()
+
+                > 判断是否集合内包含该元素
+                >
+                > 存放在集合里的内容一定要重写equals
+
+            * remove()
+
+                > 移除集合内某个元素
+                >
+                > 需要重写了equals方法
+
+            * isEmpty()
+
+                > 判断集合是否为空
+
+            * toArray()
+
+                > 可以将集合里的元素转化成字符串数组
+
+        * Iterator的方法
+
+            * hasNext
+
+                ```
+                判断是否有下一个集合元素
+                ```
+
+            * next
+
+                ```
+                迭代下一个元素
+                ```
+
+            * 注意点
+
+                * 如果集合结构发生了改变需要重新获取迭代器
+                * 在删除元素的时候，需要通过迭代器来删除，会自动更新迭代器，如果通过集合删除，数据结构将会发生改变报错
+
+        * 数组数据结构
+
+            * 初始容量是10，扩容1.5倍
+
+            * 优点
+
+                ```
+                查找元素快速，因为数组的内存地址是连续的
+                ```
+
+            * 缺点
+
+                ```
+                增删效率低，因为当某一元素发生变化其余的元素内存地址会受到牵连
+                ```
+
+                
+
+        * 单向链表
+
+            * 基本单元是节点
+
+            * 节点里主要存储两个数据分别是data和下一个节点的内存地址
+
+            * 头节点里面存储这下一个节点的内存地址，每一次新增节点相当于是将尾节点里面的内存地址改为新增的内存地址，尾节点永远存储地址为null
+
+            * 优点
+
+                ```
+                增删效率高不会牵连别的元素
+                ```
+
+            * 缺点
+
+                ```
+                查询效率低，需要对每一个元素进行遍历
+                ```
+
+        * 双向链表
+
+            * 节点里存储的数据有data和上一个节点内存地址也有下一个节点内存地址
+
+        * Vector
+
+            * 初始容量为10，扩容2倍
+            * Vector所有方法都是线程同步的都带有synachronic关键字
+            * 可以通过Collections.synachronic将非安全线程转化为安全线程
+
+        * 泛型
+
+            * 转化成某一类不需要向下转型
+            * 通过泛型可以直接保证传入数据类型的统一
+            * 还可自定义泛型
+
+        * forEach遍历数组
+
+            ```
+            int[] arr = {1,2,3,4};
+            for(int data : arr){
+            		System.out.println(data);
+            }
+            ```
+
+        * HashSet，TreeSet
+
+            * HashSet无序，元素不可重复
+            * TreeSet无序，但是可以排序，元素不能重复
+
+        * Map常用方法
+
+            * put(键，值)
+
+                ```
+                向集合中push元素
+                ```
+
+            * get(键)
+
+                ```
+                通过某个键来获取对应的value
+                ```
+
+            * size()
+
+                ```
+                获取集合长度
+                ```
+
+            * remove(键)
+
+                ```
+                删除该键和该键所对应的value
+                ```
+
+            * containsKey
+
+                ```
+                判断是否包含某个Key
+                ```
+
+            * containsValue
+
+                ```
+                判断是否包含某个value
+                ```
+
+            * isEmpty
+
+                ```
+                判断是否为空
+                ```
+
+            * clear
+
+                ```
+                清除集合中的所有元素
+                ```
+
+            * values()
+
+                ```
+                //获取集合中的所有元素
+                Collection<String> values = map.values();
+                ```
+
+            * keySet()
+
+                ```
+                获取所有的key值，可以通过key值来获取value的值但是效率较低
+                ```
+
+            * entry直接获取key和value
+
+                ```
+                Set<Map.Entry<Integer,String>> set = map.entrySet(); //集合的节点对象的类型是Map.Entry<Integer,String>
+                
+                ```
+
+        * 哈希表
+
+            * 特点
+
+                * HashMap底层的数据结构是哈希表/散列表
+                * 哈希表是数组和单向列表的结合体
+                * 数组查找数据高效，单向类标增删数据效率高，双方弥补了别人的不足点 
+
+            * 哈希表put数据和get数据
+
+                * put
+
+                    > 先将key和value放到Node列表中，通过调用key的hashCode方法生成hash值，经过hash算法将这个值转化成数组下标，通过数组下标找到元素，如果没有元素那么就将这个元素添加到该位置，如果存在链表再去比对key值，如果相等那么直接替换掉，如果不等那么就将其放入链表的末尾
+
+                * get
+
+                    > 同理先将key和value放到Node列表中，通过调用key的hashCode方法生成hash值，经过hash算法将这个值转化成数组下标，通过数组下标快速的定位位置，如果get这个位置什么都没有，那么返回结果为null，如果有单向链表那么就拿着key于所有链表进行比对如果没有返回结果为false，如果equals成功了那么就返回value值
+
+                * HashSet key部分的元素以及HashSet里的元素都对equals和hashCode进行了重写,hashCode默认情况下返回的对象的内存地址
+
+            * 如果想要发挥出哈希表最大性能需要对每一个元素散列均匀的分布，相当于是每一个位置上挂载的节点数相似
+
+            * HashMap初始化容量需要是2的倍数，达到散列分布均匀的效果，提高了效率
+
+            * 当HashMap的容量使用了75%的时候就会进行自动扩容操作
 
 * 
 
 * 
 
+* 
+
     
 
     
+
     
+
+
+
+
+
+​          
+
+​    
+
+​    
+
+
+​    
