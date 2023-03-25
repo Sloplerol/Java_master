@@ -67,7 +67,7 @@
     - 掌握环境变量的原理
     - public和class区别
 
-## 第二章
+# 第二章
 
 * 标识符
     1. 概念
@@ -1300,6 +1300,22 @@
 
                             > 这个接口实际上是有TreeSet来实现的，TreeSet底层是new了一个TreeMap，属于二叉树数据结构，该接口是可以自动按照大小进行排序的，不可以重复
 
+                * Collections工具类
+
+                    * 排序
+
+                        ```
+                        Collections.sort(集合)
+                        ```
+
+                    * 转化成线程安全的集合
+
+                        ```
+                        Collections.synchronizedList(想要转化的非线程集合)
+                        ```
+
+                        
+
         * Map(通过键值对的形式进行存储)
 
             * Map集合的key是无序并且无法重复的
@@ -1508,7 +1524,6 @@
 
                 ```
                 Set<Map.Entry<Integer,String>> set = map.entrySet(); //集合的节点对象的类型是Map.Entry<Integer,String>
-                
                 ```
 
         * 哈希表
@@ -1521,25 +1536,65 @@
 
             * 哈希表put数据和get数据
 
-                * put
+                * HashMap
+
+                    * put
 
                     > 先将key和value放到Node列表中，通过调用key的hashCode方法生成hash值，经过hash算法将这个值转化成数组下标，通过数组下标找到元素，如果没有元素那么就将这个元素添加到该位置，如果存在链表再去比对key值，如果相等那么直接替换掉，如果不等那么就将其放入链表的末尾
 
-                * get
+                    * get
 
                     > 同理先将key和value放到Node列表中，通过调用key的hashCode方法生成hash值，经过hash算法将这个值转化成数组下标，通过数组下标快速的定位位置，如果get这个位置什么都没有，那么返回结果为null，如果有单向链表那么就拿着key于所有链表进行比对如果没有返回结果为false，如果equals成功了那么就返回value值
 
-                * HashSet key部分的元素以及HashSet里的元素都对equals和hashCode进行了重写,hashCode默认情况下返回的对象的内存地址
+                    * HashSet key部分的元素以及HashSet里的元素都对equals和hashCode进行了重写,hashCode默认情况下返回的对象的内存地址
+                    * 如果想要发挥出哈希表最大性能需要对每一个元素散列均匀的分布，相当于是每一个位置上挂载的节点数相似
+                    * HashMap初始化容量需要是2的倍数，达到散列分布均匀的效果，提高了效率
+                    * 当HashMap的容量使用了75%的时候就会进行自动扩容操作，默认初始化容量为16
+                    * JDK8新增特性：当单向链表数超过8个，会讲单向链表变成二叉树，当二叉树上的节点数小于6的时候，会变回来
+                    * HashMap的key和value可以都是null
 
-            * 如果想要发挥出哈希表最大性能需要对每一个元素散列均匀的分布，相当于是每一个位置上挂载的节点数相似
+                * HashTable
 
-            * HashMap初始化容量需要是2的倍数，达到散列分布均匀的效果，提高了效率
+                    * hashtable的key和value值都是不能为空的
 
-            * 当HashMap的容量使用了75%的时候就会进行自动扩容操作
+                    * HashTable是采用了线程安全的，所有方法都带有syna关键字，效率低，但是现在有了更好的解决方法
 
-* 
+                    * HashTable扩容是原容量的二倍再加一
 
-* 
+                    * Properities
+
+                        * setProperty
+
+                            > 设置key value
+
+                        * getProperty
+
+                            > 通过key值来获取value
+
+                * TreeSet
+
+                    * 如果想要排序两个对象
+                        * 通过自定义类实现comparable接口，并在类的内部重写compareTo方法
+                        * Comparator比较器
+                    * 如何选择
+                        * 如果比较规则只有一个的话，那么使用comparable
+                        * 如果比较规则需要来回切换的话使用Comparator
+
+                * 自平衡二叉树结构
+
+                    * 采取左小右大的原则进行存放
+                    * 遍历二叉树的三种方式
+                        * 根左右
+                        * 左根右
+                        * 左右根
+
+* I/O流
+
+    * 概念
+
+        > 输入输出通过IO流可以完成硬盘的读和写
+
+        
 
 * 
 
