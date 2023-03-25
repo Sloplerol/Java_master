@@ -1594,7 +1594,215 @@
 
         > 输入输出通过IO流可以完成硬盘的读和写
 
-        
+    * IO流的分类
+
+        * 按照流的方向进行划分
+
+            * 输入流
+
+                > 往内存中去输入(读)
+
+            * 输出流
+
+                > 从内存中出来输出(写)
+
+        * 按照读取数据的不同进行分类
+
+            * 以字节的形式读取数据 
+
+                > 什么数据都可以读取
+
+            * 以字符的方式进行读取数据 
+
+                > 只能读取纯文本文件
+
+    * 四大家族
+
+        * InputStream
+        * OutputStream
+        * Reader
+        * Writer
+
+    * 字节流和字符流的判断
+
+        > 以Stream结尾的是字节流，以Reader结尾的是字符流
+
+    * 节省资源
+
+        * 所有的流都实现了Closable接口，都是可关闭的，再使用完流后一定要关闭
+        * 所有的输出流都有flushable接口，在输出完数据后需要刷新将未输出的数据强行输出完
+
+    * 流
+
+        * FileInputStream
+
+            * 作用：读取指定路径的文件
+
+            * 如果采用相对路径的方式读取文件，路径的开始是工程的根
+
+            * 常用方法
+
+                * read
+
+                    * Read里可以不添加参数表示一个一个进行读取，读取到的是ASCII码值
+                    * Read里可以添加一个字节数组表示一次读取多少个数据，并且每一次读取到的都是字节的长度
+
+                * available
+
+                    > 查看剩下多少个字节没有读取
+
+                    **初始可以获取字节的数量，不需要循环直接就可以将所有内容进行打印,不适用于太大的文件**
+
+                * skip
+
+                    > 跳过n个字节接着读取
+
+        * FileOutputStream
+
+            * FileOutputStream参数里后面追加true后代表向原文件里面追加数据
+            * 常见方法
+                * write
+                    * write(byte数组) ； 将byte数组全部写出
+                    * wirte(byte数组，start，length) ：写出byte数组从start到start+length的位置
+                    * 写入字符串：将String类调用getBytes方法转化成字节数组，再将其传入write内部
+                * 文件拷贝
+                    * 
+
+        * FileReader
+
+            * 操作和FileInputStream操作一样，只不过定义的是字符数组
+
+        * FileWriter
+
+            * 操作和FileOutputStream操作一样，只不过定义的是字符数组
+
+        * BufferReader(缓冲流)
+
+            * 构造方法只能传入字符流
+            * 将其他流作为节点流进行包装
+            * 关闭的时候只需要关闭最外层的节点流，里面的流会自动进行关闭
+
+        * InputStreamReader(转换流)
+
+            * 将字节流转化成字符流
+
+        * 数据流
+
+            * DataOutputStream
+
+                > 写入数据，但是无法直接查看
+
+            * DataInputStream
+
+                > 查看DataOutputStream写入的数据，需要保证和写入类型的顺序保持一致
+
+        * 标准输出流
+
+            * 改变输出方式
+
+                ```
+                System.out.println("hello world")
+                
+                PrintStream ps = new PrintStream(System.out);
+                ps.print("hello world");
+                ```
+
+            * 修改默认输出方向
+
+                ```
+                //标准输出指向log文件
+                PrintStream printStream = new PrintStream(new FileOutputStream("log"));
+                //修改输出方向
+                System.setOut(printStream);
+                
+                System.out.println("hello world");
+                System.out.println("hello world1");
+                System.out.println("hello world2");
+                ```
+
+        * File类
+
+            * File类和四大家族没有关系，不能完成数据的读和写
+
+            * File的常见方法
+
+                * 判断是否存在
+
+                    ```
+                    File f1 = new File("路径");
+                    System.out.println(f1.exists());
+                    ```
+
+                * 创建文件
+
+                    ```
+                    f1.createNewFile();
+                    ```
+
+                * 创建目录
+
+                    ```
+                    f1.mkdir();
+                    ```
+
+                * 创建多级目录
+
+                    ```
+                    f1.mkdirs();
+                    ```
+
+                * 获取父路径
+
+                    ```
+                    f1.getParent();
+                    ```
+
+                * 获取绝对路径
+
+                    ```
+                    f1.getAbsolutePath();
+                    ```
+
+                * 获取文件名
+
+                    ```
+                    f1.getName();
+                    ```
+
+                * 判断是否是一个文件
+
+                    ```
+                    f1.isFile();
+                    ```
+
+                * 判断是否是一个目录
+
+                    ```
+                    f1.isDirectory();
+                    ```
+
+                * 获取文件最后修改的时间
+
+                    ```
+                    f1.lastModified();
+                    ```
+
+                * 获取文件的大小(字节为单位)
+
+                    ```
+                    f1.length();
+                    ```
+
+                * 获取目录下的所有子文件
+
+                    ```
+                    File[] files = f.listFiles();
+                    for(File file : files){
+                    	System.out.println(file)
+                    }
+                    ```
+
+                    
 
 * 
 
