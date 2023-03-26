@@ -9,7 +9,7 @@ public class FileInputStreamTest01 {
         FileInputStream fis = null;
         try {
             //创建文件输入流对象
-            fis = new FileInputStream("/Users/satrol_/Desktop/hello.txt");
+            fis = new FileInputStream("parallow.txt");
             int fileData = 0;
             while((fileData = fis.read()) != -1){
                 //当数据读取完毕之后读取到到数据是-1
