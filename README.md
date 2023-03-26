@@ -1802,9 +1802,166 @@
                     }
                     ```
 
-                    
+        * 序列化和反序列化
 
-* 
+            * 序列化：将内存中的Java对象进行拆分，存储到硬盘中
+            * 反序列化：将硬盘中的数据重新恢复到内存中
+            * 参与序列化的对象都需要实现Serializable接口
+            * 序列化可以存储多个对象，但是需要使用集合来存储
+            * 序列化版本号
+                * 好处:：区分类
+                * 坏处：代码无法修改，因为一旦修改重新编译就会生成一个全新的序列化版本号，JVM会认为这是一个全新的类
+            * 建议将序列化版本号钉死
+
+        * IO + properties
+
+            > 属性配置文件，格式为key=value形式的文件，建议以properities结尾，但不是必须的，#代表注释
+
+        * 
+
+* 多线程
+
+    * 进程和线程的概念
+
+        * 进程是一个应用程序
+        * 线程是进程中的某个执行单元
+
+    * 进程和线程的关系
+
+        * 进程是不共享的，线程里堆内存和方法区内存是共享的，但是每一个线程相当于是一个栈，栈独立
+        * 每个线程相互独立，所以多线程并发是很有效率的
+
+    * 如何实现线程
+
+        * 第一种实现方式
+
+            * 编写一个类，继承thread类，重写run方法
+
+            * 启动线程对象开辟新的栈空间
+
+                ```
+                线程对象.start();
+                ```
+
+        * 第二种实现方式
+
+            * 编写一个类，实现Runnable接口，重写run方法
+            * 通过Thread t = new Thread(new 对象);
+            * 启动线程 t.start( ); 
+
+        * 两种方法选择第二种比较好，可以继承其他类
+
+    * start和run的区别
+
+        * run线程不是并发的
+        * start线程是并发的
+
+    * 线程的生命周期
+
+        * 新建状态
+
+            > 当new出来一个线程对象的时候，当start线程对象的时候进入就绪状态
+
+        * 就绪 状态
+
+            > 当前有抢夺CPU的执行权，当抢到时间片后将进入运行状态
+
+        * 运行状态
+
+            > run方法的执行意味着进入了运行阶段，当时间片用完后将会回到准备状态
+
+        * 阻塞状态
+
+            > 向等待用户输入或者是sleep这些操作的时候就会将时间片释放
+
+        * 死亡状态
+
+            > run方法执行结束
+
+    * 修改线程的名字
+
+        * 默认情况下getName得到的结果是Thread-n
+
+        * 修改名字
+
+            ```
+            线程对象.setName("名字");
+            ```
+
+    * 获取当前线程的名字
+
+        ```
+        Thread currentThread = Thread.currentThread();
+        System.out.println(currentThread.getName());
+        或者
+        Thread.currentThread().getName();
+        ```
+
+    * sleep：当前线程睡眠 (静态方法)
+
+        ```
+        Thread.sleep(毫秒数);
+        ```
+
+        **sleep只能让当前所在的线程休眠，就算你在main线程里创建了一个其他线程对象，通过这个线程对象来调用sleep方法也是不好使的**
+
+    * 终止睡眠
+
+        ```
+        Thread t = new Thread(new 线程对象);
+        t.setName("thread");
+        t.start();
+        t.interrupt();
+        ```
+
+    * 强行终止线程
+
+        ```
+        t.stop(); 
+        //数据如果没有被保存可能被损坏
+        ```
+
+    * 通过打标识来合理的终止线程
+
+        ```
+        boolean flag = true;
+            @Override
+            public void run() {
+                    for(int i = 0;i<10;i++){
+                        if(flag){
+                            System.out.println("i----->" + i);
+                            try {
+                                Thread.sleep(1000);
+                            } catch (InterruptedException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }else {
+                            return;
+                        }
+                    }
+        
+            }
+        ```
+
+    * 线程调度
+
+        * 抢占式调度
+            * 谁的优先级比较高，谁抢占的时间片更多
+        * 均分式调度
+        * java里和线程调度有关的方法
+            * setProperities 设置线程的优先级
+            * yield 线程让位
+            * join 合并线程
+
+    * dsfdsf
+
+    * dsfdsf
+
+    * Pdf
+
+* sdfdsf
+
+* dsfsdf
 
     
 
