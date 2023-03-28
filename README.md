@@ -1821,145 +1821,284 @@
 
 * 多线程
 
-    * 进程和线程的概念
+    进程和线程的概念
 
-        * 进程是一个应用程序
-        * 线程是进程中的某个执行单元
+    * 进程是一个应用程序
+    * 线程是进程中的某个执行单元
 
-    * 进程和线程的关系
+    进程和线程的关系
 
-        * 进程是不共享的，线程里堆内存和方法区内存是共享的，但是每一个线程相当于是一个栈，栈独立
-        * 每个线程相互独立，所以多线程并发是很有效率的
+    * 进程是不共享的，线程里堆内存和方法区内存是共享的，但是每一个线程相当于是一个栈，栈独立
+    * 每个线程相互独立，所以多线程并发是很有效率的
 
-    * 如何实现线程
+    如何实现线程
 
-        * 第一种实现方式
+    * 第一种实现方式
 
-            * 编写一个类，继承thread类，重写run方法
+        * 编写一个类，继承thread类，重写run方法
 
-            * 启动线程对象开辟新的栈空间
-
-                ```
-                线程对象.start();
-                ```
-
-        * 第二种实现方式
-
-            * 编写一个类，实现Runnable接口，重写run方法
-            * 通过Thread t = new Thread(new 对象);
-            * 启动线程 t.start( ); 
-
-        * 两种方法选择第二种比较好，可以继承其他类
-
-    * start和run的区别
-
-        * run线程不是并发的
-        * start线程是并发的
-
-    * 线程的生命周期
-
-        * 新建状态
-
-            > 当new出来一个线程对象的时候，当start线程对象的时候进入就绪状态
-
-        * 就绪 状态
-
-            > 当前有抢夺CPU的执行权，当抢到时间片后将进入运行状态
-
-        * 运行状态
-
-            > run方法的执行意味着进入了运行阶段，当时间片用完后将会回到准备状态
-
-        * 阻塞状态
-
-            > 向等待用户输入或者是sleep这些操作的时候就会将时间片释放
-
-        * 死亡状态
-
-            > run方法执行结束
-
-    * 修改线程的名字
-
-        * 默认情况下getName得到的结果是Thread-n
-
-        * 修改名字
+        * 启动线程对象开辟新的栈空间
 
             ```
-            线程对象.setName("名字");
+            线程对象.start();
             ```
 
-    * 获取当前线程的名字
+    * 第二种实现方式
+
+        * 编写一个类，实现Runnable接口，重写run方法
+        * 通过Thread t = new Thread(new 对象);
+        * 启动线程 t.start( ); 
+
+    * 两种方法选择第二种比较好，可以继承其他类
+
+    * 第三种实现方式(可以获取到返回结果，但是主线程需要等待Callable实现，效率低)
 
         ```
-        Thread currentThread = Thread.currentThread();
-        System.out.println(currentThread.getName());
-        或者
-        Thread.currentThread().getName();
-        ```
-
-    * sleep：当前线程睡眠 (静态方法)
-
-        ```
-        Thread.sleep(毫秒数);
-        ```
-
-        **sleep只能让当前所在的线程休眠，就算你在main线程里创建了一个其他线程对象，通过这个线程对象来调用sleep方法也是不好使的**
-
-    * 终止睡眠
-
-        ```
-        Thread t = new Thread(new 线程对象);
-        t.setName("thread");
-        t.start();
-        t.interrupt();
-        ```
-
-    * 强行终止线程
-
-        ```
-        t.stop(); 
-        //数据如果没有被保存可能被损坏
-        ```
-
-    * 通过打标识来合理的终止线程
-
-        ```
-        boolean flag = true;
-            @Override
-            public void run() {
-                    for(int i = 0;i<10;i++){
-                        if(flag){
-                            System.out.println("i----->" + i);
-                            try {
-                                Thread.sleep(1000);
-                            } catch (InterruptedException e) {
-                                throw new RuntimeException(e);
-                            }
-                        }else {
-                            return;
-                        }
-                    }
-        
+        //通过匿名内部类来实现Callable接口
+        FutureTask ft = new FutureTask(new Callable(){
+        		public Object call() throws Exception {
+                        System.out.println("callable begin");
+                        Thread.sleep(1000 * 5);
+                        System.out.println("callable end");
+                        int a = 100;
+                        int b = 200;
+                        return a + b;
             }
+        })
+        Thread t = new Thread(ft);
+        //拿到匿名内部类返回的结果
+        Object obj = ft.get();
         ```
 
-    * 线程调度
+    start和run的区别
 
-        * 抢占式调度
-            * 谁的优先级比较高，谁抢占的时间片更多
-        * 均分式调度
-        * java里和线程调度有关的方法
-            * setProperities 设置线程的优先级
-            * yield 线程让位
-            * join 合并线程
+    * run线程不是并发的
+    * start线程是并发的
 
-    * dsfdsf
+    线程的生命周期
 
-    * dsfdsf
+    * 新建状态
 
-    * Pdf
+        > 当new出来一个线程对象的时候，当start线程对象的时候进入就绪状态
 
-* sdfdsf
+    * 就绪 状态
+
+        > 当前有抢夺CPU的执行权，当抢到时间片后将进入运行状态
+
+    * 运行状态
+
+        > run方法的执行意味着进入了运行阶段，当时间片用完后将会回到准备状态
+
+    * 阻塞状态
+
+        > 向等待用户输入或者是sleep这些操作的时候就会将时间片释放
+
+    * 死亡状态
+
+        > run方法执行结束
+
+    修改线程的名字
+
+    * 默认情况下getName得到的结果是Thread-n
+
+    * 修改名字
+
+        ```
+        线程对象.setName("名字");
+        ```
+
+    获取当前线程的名字
+
+    ```
+    Thread currentThread = Thread.currentThread();
+    System.out.println(currentThread.getName());
+    或者
+    Thread.currentThread().getName();
+    ```
+
+    sleep：当前线程睡眠 (静态方法)
+
+    ```
+    Thread.sleep(毫秒数);
+    ```
+
+    **sleep只能让当前所在的线程休眠，就算你在main线程里创建了一个其他线程对象，通过这个线程对象来调用sleep方法也是不好使的**
+
+    终止睡眠
+
+    ```
+    Thread t = new Thread(new 线程对象);
+    t.setName("thread");
+    t.start();
+    t.interrupt();
+    ```
+
+    强行终止线程
+
+    ```
+    t.stop(); 
+    //数据如果没有被保存可能被损坏
+    ```
+
+    通过打标识来合理的终止线程
+
+    ```
+    boolean flag = true;
+        @Override
+        public void run() {
+                for(int i = 0;i<10;i++){
+                    if(flag){
+                        System.out.println("i----->" + i);
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }else {
+                        return;
+                    }
+                }
+    
+        }
+    ```
+
+    线程调度
+
+    * 抢占式调度
+
+        * 谁的优先级比较高，谁抢占的时间片更多
+
+    * 均分式调度
+
+    * 常用方法
+
+        * 查看优先级
+
+            ```
+            Thread t = new Thread(new 线程对象);
+            t.getPriority();
+            ```
+
+        * 设置优先级
+
+            ```
+            Thread t = new Thread(new 线程对象);
+            t.setPriority();
+            ```
+
+        * 线程优先级越高抢占CPU的时间片越多
+
+        * 让位操作
+
+            ```
+            Thread.yield();
+            ```
+
+        * 合并线程
+
+            ```
+            Thread t = new Thread(new 线程对象);
+            //阻塞main线程，先去执行当前线程
+            t.join();
+            ```
+
+            
+
+    线程安全问题
+
+    * 开发往往服务器帮你编写好了代码，你只需要关注这些数据是否安全
+
+    * 不安全的情况
+
+        * 多线程并发
+        * 共享同一个数据
+        * 对数据有修改的行为
+
+    * 如何解决
+
+        > 使用线程同步(线程排队)来解决问题，牺牲效率来换来安全
+
+        ```
+        synchronized(你想要线程共享的对象){
+         
+        }
+        ```
+
+        
+
+    * 两种编程术语
+
+        * 同步编程机制(线程排队)
+
+            > 一个干完干另一个
+
+        * 异步编程机制(线程并发)
+
+            > 各干各的
+
+    * synchronized执行原理
+
+        `假设有两个线程并发，t1先执行，遇到了synchronized，就会占有这把锁，并会执行synchronized内部的代码块，此时t2执行，发现也有synchronized但是此时这把锁被t1占有了，所有他会等待t1执行完，再去占有这把锁，synchronized相当于是一种阻塞状态`
+
+        **Java局部变量不共享，局部变量是存储在栈中的，每一个线程对应修改的都是自己的局部变量,所以说java局部变量没有线程安全问题，如果synchronized出现在静态方法里代表的是类锁，每个类只有一把类锁**
+
+        > synchronized可以出现在实例方法身上，表示整个方法都需要同步，扩大了范围，导致耗时长，效率低
+
+    * 死锁
+
+        `死锁是指两个或多个线程永久地阻塞，等待彼此释放它们需要继续执行的资源。在Java中，当多个线程尝试以不同的顺序获取相同的锁集时，就可能发生死锁。`
+
+* 线程的分类
+
+    * 用户线程
+
+        * main方法是一个用户线程
+
+    * 守护线程
+
+        * 应用场景
+
+            * 垃圾回收器
+            * 定时器自动备份
+
+        * 守护线程一般都是等待用户线程结束守护线程自动结束
+
+        * 如何使用
+
+            ```
+            t1.setDaemon(true);
+            ```
+
+    * 定时器
+
+        * 创建一个定时器对象
+
+            ```
+            Timer timer = new Timer();
+            ```
+
+        * 创建一个守护线程的定时器
+
+            ```
+            Timer timer = new Timer(true);
+            ```
+
+        * 创建一个指定时间执行指定任务的定时器
+
+            ```
+            //从firstime开始每过5秒钟执行task
+            timer.schedule(task,firstime,1000 * 5);
+            ```
+
+* Object类上的wait和notify
+
+    * wait
+
+        > 让活动在该对象身上的线程进入等待的状态
+
+    * notify
+
+        > 唤醒处于等待的线程
 
 * dsfsdf
 
