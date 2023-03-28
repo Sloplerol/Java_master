@@ -1,6 +1,6 @@
 package ThreadTest;
 
-public class threadTest04 {
+public class threadTest01 {
     public static void main(String[] args) {
         Daben daben = new Daben();
         //默认状态下线程的名字是Thread-0
