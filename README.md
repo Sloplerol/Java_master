@@ -2094,29 +2094,261 @@
 
     * wait
 
-        > 让活动在该对象身上的线程进入等待的状态
+        > 让活动在该对象身上的线程进入等待的状态，并且会释放锁
 
     * notify
 
         > 唤醒处于等待的线程
 
-* dsfsdf
+    * wait和notify建立在synchronized线程同步基础之上
+
+    * 如果一个线程已经结束了，而另一个线程在等待那么程序就会终止
+
+* 生产者和消费者模式
+
+    * 生产线程负责生产，消费线程负责消费
+    * 生产线程和消费线程必须均衡
+    * 通过wait和notify来实现生产和消费
+    * wait方法和notify方法是java对象就有的方法
+
+    ### 反射机制
+
+* 作用：可以直接操作字节码文件
+
+* 位置：存在于java.lang.reflect包下
+
+* 反射机制包含的类
+
+    * Java.lang.Class 代表字节码
+    * Java.lang.reflect.Construction 代表构造方法
+    * Java.lang.reflect.Method 代表方法
+    * java.lang.reflect.Field 代表属性
+
+* 获取Class的常见方法
+
+    * getClass
+
+        ```
+        某一类型.getClass //获取这一类型的字节码文件
+        ```
+
+    * Class.forName("完整包名")
+
+        ```
+        可以指定字节码文件生成对应类型的变量
+        ```
+
+        可以通过这个方法只执行一个类的静态代码块里的内容，这个方法的执行会导致类加载，类加载的时候，静态代码块执行
+
+    * 类型.class
+
+        ```
+        Class a = String.class //获取String类型的class
+        ```
+
+        
+
+* 通过Class文件来创建对象
+
+    ```
+    //会去调用该类的无参数构造方法
+    Class.newInstance();
+    ```
 
     
 
-    
+* 反射机制的作用
+
+    `可以通过反射机制访问Class文件，可以让代码更加灵活`
 
     
 
+* 获取绝对路径的方法
 
+    ```
+    String path = Thread.currentThread().getContextClassLoader().getResource("从src开始的路径").getPath();
+    ```
 
+* 资源绑定器
 
+    * 可以用来读取properties文件里的数据 等同于IO+Properties
 
-​          
+    * 代码示范
 
-​    
+        ```
+        ResourceBundle rb = ResourceBundle.getBundle("classInfo");
+        String username = rb.getString("username");
+        ```
 
-​    
+    
 
+* 类加载器
 
-​    
+    **String s = "Hello world" 代码开始之前，java会将所有类加载到JVM中，再去查找String类，首先会通过启动器类加载(rt.jar)去查找，如果找不到就会到扩展类(ex/*.jar)加载去查找，如果还找不到最终会到应用类加载器的classpath路径下去查找**
+
+* 反射属性(Field)
+
+    * 常见方法
+
+        * 获取类里面的所有public属性
+
+            ```
+            Field[] fields = student.getFields();
+            ```
+
+        * 获取类里面的所有属性
+
+            ```
+            Field[] fields1 = student.getDeclaredFields();
+            ```
+
+        * 获取类名或者是属性名
+
+            ```
+            getName();
+            ```
+
+        * 获取完整类名或属性名
+
+            ```
+            getSimpleName();
+            ```
+
+        * 获取属性的类型
+
+            ```
+            Class classType = field.getType();
+            System.out.println(classType.getName());
+            ```
+
+        * 获取修饰符名
+
+            ````
+            int i = field.getModifiers();
+            System.out.println(i); //获取到的是每一个修饰符的代号
+            //通过toString方法进行转化
+            System.out.println(Modifier.toString(i));
+            ````
+
+            
+
+    
+
+* 通过反射机制来获取属性
+
+    ```
+    //通过类名获取类
+    Class c = Class.forName("类名");
+    //创建对象
+    Object obj = c.newinstance();
+    //获取属性
+    Field field = c.getDeclaredField("age");
+    //设置属性值 将obj的age属性赋值为222
+    field.set(obj,222);
+    //获取属性的值
+    System.out.println(field.get(obj));
+    ```
+
+* 总结：为什么使用获取类名的方式对属性进行操作
+
+    `原因：new对象的方式相当于是去修改类源码，假如数据都是存储在properties里，通过修改properties更加灵活`
+
+可变长度参数
+
+* 可变长度参数参数要求是0-n个
+* 只能有一个
+* 可变长度参数要求参数必须是最后一位
+* 可变长度参数可以当成数组
+
+反射方法Mehtods
+
+> 大部分提取各项属性的操作都和Field一样，以及反编译
+
+* Mehtods反射机制如何调用方法
+
+    ```
+    Class c = Class.forName("类名")；
+    Object obj = c.newinstance();
+    Method mt = c.getDeclaredMethod("方法名",String.class,int.class);
+    Object retval = mt.invoke(obj,"admin",123);
+    System.out.println(retval);
+    ```
+
+反射Construction
+
+* Construction调用方法
+
+    ```
+    Class c = Class.forName("ReflectTest.ConstructorClass");
+    //调用无参数构造
+    Object obj = c.newInstance();
+    //获取有参数构造
+    Constructor constructor = c.getConstructor(String.class,int.class,double.class);
+    //调用有参数构造
+    Object newObject = constructor.newInstance("abb",23,23.32);
+    System.out.println(newObject);
+    ```
+
+反射机制查看父类和实现接口
+
+```
+Class stringclass = Class.forName("java.lang.String");
+//通过getSuperClass获取父类
+System.out.println(stringclass.getSuperclass().getSimpleName());
+//获取所有的String实现的接口
+Class[] Interface = stringclass.getInterfaces();
+for(Class in : Interface){
+    System.out.println(in.getName());
+}
+```
+
+### 注解
+
+* 语法格式
+
+    `修饰符列表 @Interface 注解名`
+
+* 使用@+注解名
+
+* 哪里都可以出现注解
+
+* JDK内置的注解类型
+
+    * Override注解
+
+        > 主要出现在方法上，用来编译检查的，被标注的方法必须重写父类的方法，只在编译阶段起作用，和运行期无关
+
+    * Deprecated注解
+
+        > 代表已过时
+
+    * 元注解
+
+        > 用来标注注解的注解 
+
+    * Target注解
+
+        > 用来标注可以出现在什么位置上的注解
+
+    * Rentenion注解
+
+        > 用来标注被标注的注解最终保存在哪
+
+* 注解中定义属性
+
+    ```
+    String name();
+    String color default "red";
+    //源文件里调用该注解的时候必须要为注解属性赋值
+    ```
+
+* 注意点
+
+    * 当注解里面有value属性,并且只有一个的话，可以省略属性名不写
+
+* 注解的作用
+
+    > 向编译器提供有关如何优化代码的提示
+    > 指定应如何序列化或反序列化代码
+    > 将代码标记为已弃用或实验性
+    > 为代码元素提供文档
