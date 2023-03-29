@@ -1,13 +1,13 @@
-import com.sun.security.jgss.GSSUtil;
+package ReflectTest;
 
-import java.util.Scanner;
-
-public class Main {
+public class Test02 {
     public static void main(String[] args) {
         try {
-            Class c = Class.forName("java.util.Date");
-            //通过这种方式去
-            Object obj = c.newInstance();
+            //获取class
+            Class c1 = Class.forName("ReflectTest.Test01");
+            //通过class来实例化对象
+            Object obj = c1.newInstance();
+            //newInstance会调用Test01类的无参数构造方法
             System.out.println(obj);
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
@@ -17,7 +17,5 @@ public class Main {
             throw new RuntimeException(e);
         }
 
-
     }
-
 }
